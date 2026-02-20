@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: ingest-multi-job
+  generateName: ingest-multi-job
 spec:
   template:
     spec:
