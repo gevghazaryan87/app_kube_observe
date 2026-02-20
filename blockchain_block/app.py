@@ -29,7 +29,6 @@ def block_details(block_hash):
         cur.execute("SELECT * FROM bitcoin_blocks WHERE block_hash = %s;", (block_hash,))
         block = cur.fetchone()
         if not block: abort(404)
-
         
         cur.execute("SELECT * FROM bitcoin_transactions WHERE block_hash = %s ORDER BY tx_index ASC;", (block_hash,))
 

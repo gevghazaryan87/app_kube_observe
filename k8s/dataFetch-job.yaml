@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ingest-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: ingest
+        image: python-app:latest
+        imagePullPolicy: Never
+        command: ["/bin/sh", "-c"]
+        args:
+          - "opentelemetry-instrument python3 extraction/engine.py"
+        env:
+          - name: DB_NAME
+            value: "appdb"
+          - name: DB_USER
+            value: "appuser"
+          - name: DB_PASSWORD
+            value: "apppassword"
+          - name: DB_HOST
+            value: "db"
+          - name: DB_PORT
+            value: "5432"
+          - name: FETCH_MODE
+            value: "multi"
+          - name: PROVIDER
+            value: "blockstream"
+          # OpenTelemetry config — send to Collector
+          - name: OTEL_RESOURCE_ATTRIBUTES
+            value: "service.name=ingest-job"
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: "http://host.docker.internal:4317"
+          - name: OTEL_EXPORTER_OTLP_PROTOCOL
+            value: "grpc"
+          - name: OTEL_LOGS_EXPORTER
+            value: "otlp"
+          - name: OTEL_METRICS_EXPORTER
+            value: "otlp"
+          - name: OTEL_TRACES_EXPORTER
+            value: "otlp"
+      restartPolicy: Never
+  backoffLimit: 3

@@ -14,5 +14,5 @@ RUN opentelemetry-bootstrap -a install
 
 COPY . .
 
-# Default command (can be overridden in docker-compose)
+# Default command (can be overridden in docker-compose or Kubernetes)
 CMD ["python3", "app.py"]
